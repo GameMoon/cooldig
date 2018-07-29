@@ -11,10 +11,19 @@ xDir,zDir = 0,1
 function unload( _bKeepOneFuelStack )
     print( "debug:unload" )
     local numberofTurns = 0
-    while not turtle.inspect() do
+
+    success,data = turtle.inspect()
+    while data.name ~="minecraft:chest" and numberofTurns < 4 do
         turnRight()
         numberofTurns = numberofTurns + 1
+        success,data = turtle.inspect()
     end
+
+    if numberofTurns == 4 then
+        print("nincs láda")
+        read()
+    end
+  
 	print( "Unloading items..." )
 	for n=1,16 do
 		local nCount = turtle.getItemCount(n)
