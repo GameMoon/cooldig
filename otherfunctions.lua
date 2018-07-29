@@ -9,8 +9,12 @@ xDir,zDir = 0,1
 -- refuel = false-- Filled in further down
 
 function unload( _bKeepOneFuelStack )
-	print( "debug:unload" )
-	turnRight()
+    print( "debug:unload" )
+    local numberofTurns = 0
+    while not turtle.inspect() do
+        turnRight()
+        numberofTurns = numberofTurns + 1
+    end
 	print( "Unloading items..." )
 	for n=1,16 do
 		local nCount = turtle.getItemCount(n)
@@ -28,8 +32,11 @@ function unload( _bKeepOneFuelStack )
 		end
 	end
 	collected = 0
-	turtle.select(1)
-	turnLeft()
+    turtle.select(1)
+    for i = 0,numberofTurns do
+        turnLeft()
+    end
+
 end
 
 function returnSupplies()
@@ -38,12 +45,13 @@ function returnSupplies()
 	print( "Returning to surface..." )
 	goTo( 0,0,0,0,-1 )
 	
-	local fuelNeeded = 2*(x+y+z)+1
+	local fuelNeeded = 2*(math.abs(x)+math.abs(y)+math.abs(z))+1
 	if not refuel( fuelNeeded ) then
 		unload( true )
 		print( "Waiting for fuel" )
 		while not refuel( fuelNeeded ) do
-			os.pullEvent( "turtle_inventory" )
+            os.pullEventRaw( "turtle_inventory" )
+            sleep( 0.3 )
 		end
 	else
 		unload( true )	
@@ -79,31 +87,43 @@ function collect()
 	return true
 end
 
+function calculateNeeded()
+    return math.abs(xPos) + math.abs(zPos) + math.abs(depth) + 2
+end
+
+function neededFuel(ammount)
+     if not ammount then
+        return calculateNeeded()
+    else 
+        return ammount
+    end
+end
+
+
+
 function refuel( ammount )
 	print( "debug:refuel" )
-	local fuelLevel = turtle.getFuelLevel()
+    local fuelLevel = turtle.getFuelLevel()
+    
 	if fuelLevel == "unlimited" then
 		return true
 	end
-    
-    
-    local needed = (xPos + zPos + depth + 2)
+  
+    local neededFuel = neededFuel(ammount)
 
-    if ammount ~= nil then
-        needed = ammount
-    end
-
-    print(" calculated fuel: "..needed)
-	if turtle.getFuelLevel() < needed then
+    print(" calculated fuel: "..neededFuel)
+	if fuelLevel < neededFuel then
 		local fueled = false
 		for n=1,16 do
 			if turtle.getItemCount(n) > 0 then
-				turtle.select(n)
+                turtle.select(n)
 				if turtle.refuel(1) then
-					while turtle.getItemCount(n) > 0 and turtle.getFuelLevel() < needed do
-						turtle.refuel(1)
+					while turtle.getItemCount(n) > 0 and turtle.getFuelLevel() < neededFuel do
+                        if not turtle.refuel(1) then
+                            break
+                        end
 					end
-					if turtle.getFuelLevel() >= needed then
+					if turtle.getFuelLevel() >= neededFuel then
 						turtle.select(1)
 						print( "I Just refueled..." )
 						return true

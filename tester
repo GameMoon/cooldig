@@ -32,11 +32,14 @@ end
 
 
 
-print( "Excavating..." )
-doIT(size)
-print( "Returning to start..." )
--- Return to where we started
-turnLeft()
-unload( false )
+print( "Elore")
+printPos()
 turnRight()
-print( "Mined "..(collected + unloaded).." items total." )
+print("Jobbra")
+printPos()
+turnRight()
+print("hatra")
+printpos()
+turnRight()
+print("balra")
+printPos()

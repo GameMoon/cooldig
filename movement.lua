@@ -137,11 +137,62 @@ function turnRight()
 	xDir, zDir = zDir, -xDir
 end
 
+-- function goTo( x, y, z, xd, zd )
+-- printPos()
+-- 	print( "debug:goTo" )
+-- 	while depth > y do
+-- 		tryUp()
+-- 	end
+
+-- 	if xPos > x then
+-- 		while xDir ~= -1 do
+-- 			turnLeft()
+-- 		end
+-- 		while xPos > x do
+-- 			tryForward()
+-- 		end
+-- 	elseif xPos < x then
+-- 		while xDir ~= 1 do
+-- 			turnLeft()
+-- 		end
+-- 		while xPos < x do
+-- 			tryForward()
+-- 		end
+-- 	end
+	
+-- 	if zPos > z then
+-- 		while zDir ~= -1 do
+-- 			turnLeft()
+-- 		end
+-- 		while zPos > z do
+-- 			tryForward()
+-- 		end
+-- 	elseif zPos < z then
+-- 		while zDir ~= 1 do
+-- 			turnLeft()
+-- 		end
+-- 		while zPos < z do
+-- 			tryForward()
+-- 		end	
+-- 	end
+	
+-- 	while depth < y do
+-- 		tryDown()
+-- 	end
+	
+-- 	while zDir ~= zd or xDir ~= xd do
+-- 		turnLeft()
+-- 	end
+-- end
 function goTo( x, y, z, xd, zd )
-printPos()
-	print( "debug:goTo" )
 	while depth > y do
-		tryUp()
+		if turtle.up() then
+			depth = depth - 1
+		elseif turtle.digUp() or turtle.attackUp() then
+			collect()
+		else
+			sleep( 0.5 )
+		end
 	end
 
 	if xPos > x then
@@ -149,14 +200,26 @@ printPos()
 			turnLeft()
 		end
 		while xPos > x do
-			tryForward()
+			if turtle.forward() then
+				xPos = xPos - 1
+			elseif turtle.dig() or turtle.attack() then
+				collect()
+			else
+				sleep( 0.5 )
+			end
 		end
 	elseif xPos < x then
 		while xDir ~= 1 do
 			turnLeft()
 		end
 		while xPos < x do
-			tryForward()
+			if turtle.forward() then
+				xPos = xPos + 1
+			elseif turtle.dig() or turtle.attack() then
+				collect()
+			else
+				sleep( 0.5 )
+			end
 		end
 	end
 	
@@ -165,19 +228,37 @@ printPos()
 			turnLeft()
 		end
 		while zPos > z do
-			tryForward()
+			if turtle.forward() then
+				zPos = zPos - 1
+			elseif turtle.dig() or turtle.attack() then
+				collect()
+			else
+				sleep( 0.5 )
+			end
 		end
 	elseif zPos < z then
 		while zDir ~= 1 do
 			turnLeft()
 		end
 		while zPos < z do
-			tryForward()
+			if turtle.forward() then
+				zPos = zPos + 1
+			elseif turtle.dig() or turtle.attack() then
+				collect()
+			else
+				sleep( 0.5 )
+			end
 		end	
 	end
 	
 	while depth < y do
-		tryDown()
+		if turtle.down() then
+			depth = depth + 1
+		elseif turtle.digDown() or turtle.attackDown() then
+			collect()
+		else
+			sleep( 0.5 )
+		end
 	end
 	
 	while zDir ~= zd or xDir ~= xd do
