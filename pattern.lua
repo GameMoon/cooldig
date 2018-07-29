@@ -1,6 +1,4 @@
 
-
-
 --jobbra elore
 function makeColumn()
 	print( "debug:makeColumn" )

@@ -1,5 +1,4 @@
 
-
 function tryForward()
 printPos()
 		print( "debug:tryForward" )
