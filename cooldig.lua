@@ -36,7 +36,5 @@ print( "Excavating..." )
 doIT(size)
 print( "Returning to start..." )
 -- Return to where we started
-turnLeft()
 unload( false )
-turnRight()
 print( "Mined "..(collected + unloaded).." items total." )
